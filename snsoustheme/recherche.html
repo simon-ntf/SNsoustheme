@@ -1,0 +1,160 @@
+#SET{snpos,''}
+#SET{snpushs_corps,''}
+#SET{snpushs_cold,''}
+#SET{snpushs_colg,''}
+#SET{snpushs_tete,''}
+#SET{snpos,corps} [(#SET{snpushs_corps,#GET{snpos}|sn_objet_liste_snpushs{recherche}})]
+#SET{snpos,colg} [(#SET{snpushs_colg,#GET{snpos}|sn_objet_liste_snpushs{recherche}})]
+#SET{snpos,cold} [(#SET{snpushs_cold,#GET{snpos}|sn_objet_liste_snpushs{recherche}})]
+#SET{snpos,tete} [(#SET{snpushs_tete,#GET{snpos}|sn_objet_liste_snpushs{recherche}})]
+#SET{liste_docs, #ARRAY}
+<!DOCTYPE html>
+<html dir="#LANG_DIR" lang="#LANG" class="[(#LANG_DIR)][ sn-mode-couleur-(#ENV{sn_mode_couleur})][ sn-mode-typo-(#ENV{sn_mode_typo})] sn-page-grille[ (#LANG)] no-js">
+<head>
+	<script type='text/javascript'>/*<![CDATA[*/(function(H){H.className=H.className.replace(/\bno-js\b/,'js')})(document.documentElement);/*]]>*/</script>
+	<title><:resultats_recherche:> - [(#NOM_SITE_SPIP|textebrut)]</title>
+	<INCLURE{fond=inclure/head,robots=none} />
+</head>
+
+<body class="pas_surlignable page_recherche">
+<div class="page">
+
+	<INCLURE{fond=inclure/header,env} />
+	<INCLURE{fond=inclure/sn_header_menus,env} />
+
+	[(#REM) Contenu principal : Resultats de la recherche ]
+	<main class="main" role="main">
+
+		[(#GET{snpushs_tete}|count|>{0}|oui)<div class="sn-section sn-section-tete">
+			<INCLURE{fond=inclure/sn_pushs,objet=snschema,id_objet=2,sn_position=tete,domid=sn-pushs-tete,mode_diapo=#GET{snpushs_tete}|count|>{1}|?{oui,non},liste_snpushs=#GET{snpushs_tete}} />
+		</div>]
+
+		<div class="sn-section sn-section-contenu wrapper">
+			<div class="sn-brique content" id="content">
+			<p class="arbo"><a href="#URL_SITE_SPIP/"><:accueil_site:></a> &gt; <:info_rechercher:>[ &gt; <strong class="on">(#RECHERCHE)</strong>]</p>
+
+			[<div class="cartouche">
+				<h1><:resultats_recherche:></h1>
+				<p class="soustitre">&#171;&nbsp;(#RECHERCHE)&nbsp;&#187;</p>
+			</div>]
+
+			[(#REM) Articles trouves ]
+			<B_articles>
+			<div class="menu menu_articles">
+				#ANCRE_PAGINATION
+				<h2><:articles:> (#GRAND_TOTAL)</h2>
+				<ul class="spip">
+					<BOUCLE_articles(ARTICLES) {recherche} {!par points} {pagination}>
+					<li><a href="#URL_ARTICLE">#TITRE</a></li>
+					</BOUCLE_articles>
+				</ul>
+				[<nav role="navigation" class="p pagination">(#PAGINATION)</nav>]
+			</div>
+			</B_articles>
+
+			[(#REM) Rubriques trouvees ]
+			<B_rubriques>
+			<div class="menu menu_rubriques">
+				#ANCRE_PAGINATION
+				<h2><:rubriques:> (#GRAND_TOTAL)</h2>
+				<ul class="spip">
+					<BOUCLE_rubriques(RUBRIQUES) {recherche} {!par points} {pagination 5}>
+					<li><a href="#URL_RUBRIQUE">#TITRE</a></li>
+					</BOUCLE_rubriques>
+				</ul>
+				[<nav role="navigation" class="p pagination">(#PAGINATION)</nav>]
+			</div>
+			</B_rubriques>
+
+			[(#REM) Mots-cles trouves ]
+			<B_mots>
+			<div class="menu menu_mots">
+				#ANCRE_PAGINATION
+				<h2><:mots_clefs:> (#GRAND_TOTAL)</h2>
+				<ul class="spip">
+					<BOUCLE_mots(MOTS?) {recherche} {!par points} {pagination 5}>
+					<li><a href="#URL_MOT">#TITRE</a></li>
+					</BOUCLE_mots>
+				</ul>
+				[<nav role="navigation" class="p pagination">(#PAGINATION)</nav>]
+			</div>
+			</B_mots>
+
+			[(#REM) Breves trouvees ]
+			<B_breves>
+			<div class="menu menu_breves">
+				#ANCRE_PAGINATION
+				<h2><:breves:breves:> (#GRAND_TOTAL)</h2>
+				<ul class="spip">
+					<BOUCLE_breves(BREVES?) {recherche} {!par points} {pagination 5}>
+					<li><a href="#URL_BREVE">#TITRE</a></li>
+					</BOUCLE_breves>
+				</ul>
+				[<nav role="navigation" class="p pagination">(#PAGINATION)</nav>]
+			</div>
+			</B_breves>
+
+			[(#REM) Messages trouves ]
+			<B_messages>
+			<div class="menu menu_comments">
+				#ANCRE_PAGINATION
+				<h2><:messages_forum:> (#GRAND_TOTAL)</h2>
+				<ul class="spip">
+					<BOUCLE_messages(FORUMS?) {recherche} {!par points} {pagination 5}>
+					[<li><a href="#URL_FORUM"[ title="(#TITRE|attribut_html|couper{80})"]>(#TEXTE|couper{80})</a></li>]
+					</BOUCLE_messages>
+				</ul>
+				[<nav role="navigation" class="p pagination">(#PAGINATION)</nav>]
+			</div>
+			</B_messages>
+
+			[(#REM) Sites web trouves ]
+			<B_sites>
+			<div class="menu menu_sites">
+				#ANCRE_PAGINATION
+				<h2><:sites_web:> (#GRAND_TOTAL)</h2>
+				<ul class="spip">
+					<BOUCLE_sites(SITES?) {recherche} {!par points} {pagination 5}>
+					<li><a href="[(#ID_SYNDIC|generer_url_entite{site,'','',#CONNECT})]">#NOM_SITE</a></li>
+					</BOUCLE_sites>
+				</ul>
+				[<nav role="navigation" class="p pagination">(#PAGINATION)</nav>]
+			</div>
+			</B_sites>
+
+			<B_sndocuments>
+			<div class="menu menu_sites">
+				<h2><:images:> (#GRAND_TOTAL)</h2>
+				<ul>
+					<BOUCLE_sndocuments(DOCUMENTS?) {media=image} {recherche} {!par points}>
+					#SET{liste_docs, #GET{liste_docs}|push{#ID_DOCUMENT}}
+					</BOUCLE_sndocuments>
+					[(#SET{liste_docs_str,#GET{liste_docs}|sn_implose})]
+					[(#CONFIG{sn_recherche_images}|=={on}|oui)#MODELE{sngalerie,env,ajax,liste_images=#GET{liste_docs_str}}]
+				</ul>
+			</div>
+			</B_sndocuments>
+
+			</div><!--.content-->
+
+			[(#GET{snpushs_corps}|count|>{0}|oui)<section class="sn-brique sn-brique-bas">
+				<INCLURE{fond=inclure/sn_pushs,objet=snschema,id_objet=2,sn_position=corps,domid=sn-pushs-corps,liste_snpushs=#GET{snpushs_corps}} />
+			</section>]
+
+		</div><!--.wrapper-->
+
+		[(#GET{snpushs_colg}|count|>{0}|oui)<aside class="aside sn-barre sn-barre-gauche" role="complementary">
+			<INCLURE{fond=inclure/sn_pushs,objet=snschema,id_objet=2,sn_position=colg,domid=sn-pushs-colg,liste_snpushs=#GET{snpushs_colg}} />
+		</aside><!--.aside-->]
+
+		[(#GET{snpushs_cold}|count|>{0}|oui)<aside class="aside sn-barre sn-barre-droite" role="complementary">
+			<INCLURE{fond=inclure/sn_pushs,objet=snschema,id_objet=2,sn_position=cold,domid=sn-pushs-cold,liste_snpushs=#GET{snpushs_cold}} />
+		</aside><!--.aside-->]
+
+	</main><!--.main-->
+
+	<INCLURE{fond=inclure/footer,self=#SELF} />
+
+</div><!--.page-->
+</body>
+</html>

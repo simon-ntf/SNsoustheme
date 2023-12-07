@@ -1,0 +1,9 @@
+<B_nav>
+<nav class="nav sn-nav sn-section sn-nav-simple clearfix" id="nav" role="navigation">
+	<ul class="sn-brique">
+		<BOUCLE_nav(RUBRIQUES) {racine} {tout} {sn_menu==menuppl} {par num titre, titre}>
+		<li class="nav-item[ (#EXPOSE)][ (#COMPTEUR_BOUCLE|=={1}|oui)first][ (#COMPTEUR_BOUCLE|=={#TOTAL_BOUCLE}|oui)last]"><a class="sn-btn snbn1" href="#URL_RUBRIQUE">#TITRE</a></li>
+		</BOUCLE_nav>
+	</ul>
+</nav>
+</B_nav>

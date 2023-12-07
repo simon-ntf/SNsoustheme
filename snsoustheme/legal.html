@@ -1,0 +1,83 @@
+[(#CONFIG{sn_page_legal_activer}|=={on}|oui|sinon_interdire_acces)]
+#SET{snpos,''}
+#SET{snpushs_corps,''}
+#SET{snpushs_cold,''}
+#SET{snpushs_colg,''}
+#SET{snpushs_tete,''}
+#SET{snpos,corps} [(#SET{snpushs_corps,#GET{snpos}|sn_objet_liste_snpushs{legal}})]
+#SET{snpos,colg} [(#SET{snpushs_colg,#GET{snpos}|sn_objet_liste_snpushs{legal}})]
+#SET{snpos,cold} [(#SET{snpushs_cold,#GET{snpos}|sn_objet_liste_snpushs{legal}})]
+#SET{snpos,tete} [(#SET{snpushs_tete,#GET{snpos}|sn_objet_liste_snpushs{legal}})]
+<!DOCTYPE html>
+<html dir="#LANG_DIR" lang="#LANG" class="[(#LANG_DIR)][ sn-mode-couleur-(#ENV{sn_mode_couleur})][ sn-mode-typo-(#ENV{sn_mode_typo})] sn-page-grille[ (#LANG)] no-js">
+<head>
+	<script type='text/javascript'>/*<![CDATA[*/(function(H){H.className=H.className.replace(/\bno-js\b/,'js')})(document.documentElement);/*]]>*/</script>
+	<title><:snedition:page_legal_titre:> - [(#NOM_SITE_SPIP|textebrut)]</title>
+	<meta name="description" content="<:snedition:page_legal_descriptif:>" />
+	<INCLURE{fond=inclure/head,robots=none} />
+</head>
+
+<body class="pas_surlignable page_legal">
+<div class="page">
+
+	<INCLURE{fond=inclure/header,env} />
+	<INCLURE{fond=inclure/sn_header_menus,env} />
+
+	<main class="main" role="main">
+
+		[(#GET{snpushs_tete}|count|>{0}|oui)<div class="sn-section sn-section-tete">
+			<INCLURE{fond=inclure/sn_pushs,objet=snschema,id_objet=2,sn_position=tete,domid=sn-pushs-tete,mode_diapo=#GET{snpushs_tete}|count|>{1}|?{oui,non},liste_snpushs=#GET{snpushs_tete}} />
+		</div>]
+
+		<div class="sn-section sn-section-contenu wrapper">
+			<div class="sn-brique content" id="content">
+			<p class="arbo"><a href="#URL_SITE_SPIP/"><:accueil_site:></a> &gt; <strong class="on"><:snedition:page_legal_titre:></strong></p>
+
+			<div class="cartouche">
+				<h1><:snedition:page_legal_titre:></h1>
+			</div>
+			[(#CONFIG{sn_responsable_legal}|oui)
+			<div class="texte">
+				<p>Responsable de la publication : <strong>#CONFIG{sn_responsable_legal}</strong>.</p>
+				<p>Le fait de consulter ce site implique l'acceptation et l'application des présentes conditions, que nous nous réservons le droit de modifier à tout moment.</p>
+				<h2>Propriété intellectuelle</h2>
+				<p>La structure générale, ainsi que les textes, photos, images et tout élement composant le site <strong>#NOM_SITE_SPIP</strong> sont la propriété exclusive de <strong>#CONFIG{sn_responsable_legal}</strong>. Toute reproduction, totale ou partielle, de ce site ou d'un ou plusieurs de ses composants, par quelque procédé que ce soit, sans son autorisation expresse est interdite, et constituerait une contrefaçon sanctionnée par les articles L.335-2 et suivants du Code de la propriété intellectuelle.</p>
+				<h2 id="legal_forums">Participation aux forums et déontologie</h2>
+				<p>Nous nous réservons le droit de ne pas publier ou de supprimer tout contenu insultant, illégal ou hors de propos, et d'en bannir l'auteur, sans nécessairement l'en informer au préalable. Toute personne publiant des contenus illégaux est passible de poursuite.</p>
+				<h2 id="legal_cookies">Données de navigation (cookies)</h2>
+				<h3>Données de navigation internes</h3>
+				<p>Ce site utilise des données de navigation (ou "cookies") nécessaires à son fonctionnement et à la navigation, comme le choix de la langue et autres préférences, et des informations techniques relatives aux connexions. Ces données anonymes sont générées automatiquement, elles ne peuvent être désactivées et n'ont pas de limite de conservation.</p>
+				<h3>Données collectées par des services tiers</h3>
+				<p>Par ailleurs, certains services tiers utilisés sur ce site peuvent par ailleurs enregistrer des données de navigation (ou "cookies"). En autorisant ces services tiers, vous acceptez le dépôt et la lecture de ces données et l'utilisation de technologies de suivi nécessaires à leur bon fonctionnement. Vous avez la possibilité d'accepter ou de refuser chacun de ces services.</p>
+				<p>Vous pouvez modifier vos choix à tout moment en affichant le <strong><a href="#tarteaucitron">panneau de gestion des cookies</a></strong>.</p>
+				<h2 id="legal_donnees">Données personnelles</h2>
+				<p>En tant qu'usager, vous disposez d'un droit d'accès, de rectification et de suppression des informations vous concernant.</p>
+				[(#PLUGIN{snabonnements}|oui|et{#CONFIG{accepter_inscriptions}}|oui|et{#CONFIG{accepter_visiteurs}}|oui)
+				<h3>Abonnés</h3>
+				<p>En tant qu'utilisateur authenthifié, vous autorisez le site <strong>#NOM_SITE_SPIP</strong> à stocker et exploiter les données personnelles que vous fournissez pour assurer et améliorer les services auxquels vous souscrivez. Ces données sont conservées durant [(#LANG|sn_option_abo_duree_abonnement) ]ans puis, en l'absence de renouvellement, effacées à la suite de ce délai. Une fois authentifié, accédez à la page "mon compte" pour modifier directement vos informations et choisir vos abonnements à des services ou à des lettres d'information.</p>
+				]
+				<p>Pour toute demande concernant vos données personnelles, veuillez utiliser le <strong><a href="#URL_PAGE{contact}">formulaire de contact</a></strong>.</p>
+			</div><!--.texte-->
+         ]
+			</div><!--.content-->
+
+			[(#GET{snpushs_corps}|count|>{0}|oui)<section class="sn-brique sn-brique-bas">
+				<INCLURE{fond=inclure/sn_pushs,objet=snschema,id_objet=2,sn_position=corps,domid=sn-pushs-corps,liste_snpushs=#GET{snpushs_corps}} />
+			</section>]
+
+		</div><!--.wrapper-->
+
+		[(#GET{snpushs_colg}|count|>{0}|oui)<aside class="aside sn-barre sn-barre-gauche" role="complementary">
+			<INCLURE{fond=inclure/sn_pushs,objet=snschema,id_objet=2,sn_position=colg,domid=sn-pushs-colg,liste_snpushs=#GET{snpushs_colg}} />
+		</aside><!--.aside-->]
+		[(#GET{snpushs_cold}|count|>{0}|oui)<aside class="aside sn-barre sn-barre-droite" role="complementary">
+			<INCLURE{fond=inclure/sn_pushs,objet=snschema,id_objet=2,sn_position=cold,domid=sn-pushs-cold,liste_snpushs=#GET{snpushs_cold}} />
+		</aside><!--.aside-->]
+
+	</main><!--.main-->
+
+	<INCLURE{fond=inclure/footer,self=#SELF} />
+
+</div><!--.page-->
+</body>
+</html>

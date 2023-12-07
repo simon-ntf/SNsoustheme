@@ -1,0 +1,21 @@
+<footer class="footer clearfix sn-section" role="contentinfo">
+<div class="sn-brique sn-brique-footer">
+	<p class="colophon">
+		#NOM_SITE_SPIP. <BOUCLE_annee(ARTICLES){par date}{0,1}>[(#DATE|annee|!={#VAL{Y}|date}|oui)[(#DATE|annee)]]</BOUCLE_annee> - </B_annee>[(#DATE|annee). ]<:info_tous_droits_reserves:>
+		<br /><a rel="contents" href="#URL_PAGE{plan}" class="first"><:plan_site:></a>[
+		(#SESSION{id_auteur}|non) | <a href="[(#URL_PAGE{login}|parametre_url{url,#SELF})]" rel="nofollow" class='login_modal'><:lien_connecter:></a>][
+		(#AUTORISER{ecrire})| <a href="#CONST{_DIR_RESTREINT_ABS}"><:espace_prive:></a>][
+		(#SESSION{id_auteur}|oui|et{#PLUGIN{snabonnements}|oui}|et{#CONFIG{sn_abo_page_compte_activer}|=={on}|oui}) | <a href="[(#URL_PAGE{compte})]" rel="nofollow"><:snabo:page_compte_titre:></a>][
+		(#SESSION{id_auteur}|oui) | <a href="#URL_LOGOUT" rel="nofollow"><:icone_deconnecter:></a>] |
+		[(#CONFIG{sn_tarteaucitron_activer}|=={on}|oui)<a rel="nofollow" href="#SELF#tarteaucitron"><:snedition:cookies_titre:></a> |]
+		[(#CONFIG{sn_page_legal_activer}|=={on}|oui)<a rel="nofollow" href="#URL_PAGE{legal}"><:snedition:page_legal_titre:></a> |]
+		[(#CONFIG{sn_contact_activer}|=={on}|oui)<a rel="nofollow" href="#URL_PAGE{contact}"><:contact:></a> |]
+		[(#CONFIG{sn_page_actus_activer}|=={on}|oui)<a rel="nofollow" href="#URL_PAGE{actualites}"><:snedition:page_actualites_titre:></a> |]
+		<a href="#URL_PAGE{backend}" rel="alternate" title="<:syndiquer_site:>" class="last">RSS&nbsp;2.0</a>
+	</p>
+	<ul class="generators">
+		[<li class="generator"><a href="https://www.spip.net/" rel="generator" title="<:site_realise_avec_spip:>" class="generator snsuite_out">(#CHEMIN{spip.svg}|balise_svg{'',SPIP})</a></li>]
+		[<li class="generator"><a href="https://www.snsuite.net/" rel="generator" title="<:snedition:site_realise_avec_snsuite:>" class="generator snsuite_out">(#CHEMIN{snsuite.svg}|balise_svg{'',SNSUITE})</a></li>]
+	</ul>
+</div>
+</footer>

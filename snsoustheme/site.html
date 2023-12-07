@@ -1,0 +1,117 @@
+#SET{snpos,''}
+#SET{snpushs_corps,''}
+#SET{snpushs_cold,''}
+#SET{snpushs_colg,''}
+#SET{snpushs_tete,''}
+<BOUCLE_principale(SITES){id_syndic}>
+#SET{snpos,corps} [(#SET{snpushs_corps,#GET{snpos}|sn_objet_liste_snpushs{site,#ID_SYNDIC}})]
+#SET{snpos,colg} [(#SET{snpushs_colg,#GET{snpos}|sn_objet_liste_snpushs{site,#ID_SYNDIC}})]
+#SET{snpos,cold} [(#SET{snpushs_cold,#GET{snpos}|sn_objet_liste_snpushs{site,#ID_SYNDIC}})]
+#SET{snpos,tete} [(#SET{snpushs_tete,#GET{snpos}|sn_objet_liste_snpushs{site,#ID_SYNDIC}})]
+<!DOCTYPE html>
+[(#REM) Les sites n'ont pas de "lang" a proprement parler ; on se base donc sur la langue de la rubrique qui les contient. Les articles syndiques, eux, ont une "lang". ]
+<BOUCLE_lang(RUBRIQUES){id_rubrique}>
+	<html dir="#LANG_DIR" lang="#LANG" class="[(#LANG_DIR)][ sn-mode-couleur-(#ENV{sn_mode_couleur})][ sn-mode-typo-(#ENV{sn_mode_typo})] sn-page-grille[ (#LANG)] no-js">
+</BOUCLE_lang>
+<head>
+	<script type='text/javascript'>/*<![CDATA[*/(function(H){H.className=H.className.replace(/\bno-js\b/,'js')})(document.documentElement);/*]]>*/</script>
+	<title>[(#NOM_SITE|textebrut) - ][(#NOM_SITE_SPIP|textebrut)]</title>
+	[<meta name="description" content="(#DESCRIPTIF|couper{150}|attribut_html)" />]
+	[<link rel="canonical" href="(#ID_SYNDIC|generer_url_entite{site}|url_absolue{#URL_SITE_SPIP})" />]
+	<INCLURE{fond=inclure/head,robots=noindex} />
+</head>
+
+<body class="pas_surlignable page_site">
+<div class="page">
+
+	<INCLURE{fond=inclure/header,env} />
+	<INCLURE{fond=inclure/sn_header_menus,env} />
+
+	<main class="main" role="main">
+
+		[(#GET{snpushs_tete}|count|>{0}|oui)<div class="sn-section sn-section-tete">
+			<INCLURE{fond=inclure/sn_pushs,objet=snschema,id_objet=2,sn_position=tete,domid=sn-pushs-tete,mode_diapo=#GET{snpushs_tete}|count|>{1}|?{oui,non},liste_snpushs=#GET{snpushs_tete}} />
+		</div>]
+
+		<div class="sn-section sn-section-contenu wrapper">
+			<div class="sn-brique content" id="content">
+			<p class="arbo"><a href="#URL_SITE_SPIP/"><:accueil_site:></a><BOUCLE_ariane(HIERARCHIE){id_syndic}> &gt; <a href="#URL_RUBRIQUE">[(#TITRE|couper{80})]</a></BOUCLE_ariane>[ &gt; <strong class="on">(#NOM_SITE|couper{80})</strong>]</p>
+
+			<div class="cartouche">
+				<a href="#URL_SITE">[(#LOGO_SITE|image_reduire{224,*})]</a>
+				<h1 class="#EDIT{nom_site}">#NOM_SITE</h1>
+			</div>
+
+			[<div class="#EDIT{descriptif} chapo">(#DESCRIPTIF)</div>]
+			[<p class="#EDIT{url_site} hyperlien"><a href="#URL_SITE" class="spip_out">(#URL_SITE|couper{80})</a></p>]
+
+			</div><!--content-->
+
+			<B_articles>
+			<section class="sn-brique sn-brique-menu-articles menu menu_articles">
+				#ANCRE_PAGINATION
+				<h2><:articles:></h2>
+				<ul>
+					<BOUCLE_articles(SYNDIC_ARTICLES?) {id_syndic} {age<180} {!par date} {pagination 5}>
+					<li>
+						<h3><a href="#URL_ARTICLE" class="spip_out">#TITRE</a></h3>
+						[<div class="enclosures">(#TAGS|afficher_enclosures)</div>]
+						<small>[(#DATE|affdate_jourcourt)][, <:par_auteur:> (#LESAUTEURS)][ &mdash; <em>(#TAGS|afficher_tags)</em>]</small>
+						[<div class="introduction">(#DESCRIPTIF|image_reduire{672,*})</div>]
+					</li>
+					</BOUCLE_articles>
+				</ul>
+				[<nav role="navigation" class="p pagination">(#PAGINATION)</nav>]
+			</section><!--.sn-brique-menu-articles-->
+			</B_articles>
+
+			[(#GET{snpushs_corps}|count|>{0}|oui)<section class="sn-brique sn-brique-bas">
+				<INCLURE{fond=inclure/sn_pushs,objet=snschema,id_objet=2,sn_position=corps,domid=sn-pushs-corps,liste_snpushs=#GET{snpushs_corps}} />
+			</section>]
+
+			[<div class="notes"><hr />(#NOTES)</div>]
+
+		</div><!--.wrapper-->
+
+		[(#GET{snpushs_colg}|count|>{0}|oui)<aside class="aside sn-barre sn-barre-gauche" role="complementary">
+			<INCLURE{fond=inclure/sn_pushs,objet=snschema,id_objet=2,sn_position=colg,domid=sn-pushs-colg,liste_snpushs=#GET{snpushs_colg}} />
+		</aside><!--.aside-->]
+
+		<aside class="aside sn-barre sn-barre-droite" role="complementary">
+			<INCLURE{fond=inclure/navsub, id_rubrique} />
+			[(#REM) Autres sites web ]
+			<B_sites>
+			<div class="menu sn-pushs sn-pushs-cold"><div class="sn-push">
+				#ANCRE_PAGINATION
+				<p class="sn-push-etiquette"><span><:sites_web:></span></p>
+				<ul>
+					<BOUCLE_sites(SITES) {par nom_site} {pagination 20}>
+					<li><a href="[(#ID_SYNDIC|generer_url_entite{site,'','',#CONNECT})]"[ class="(#EXPOSE)"]>#NOM_SITE</a></li>
+					</BOUCLE_sites>
+				</ul>
+				[<nav role="navigation" class="p pagination">(#PAGINATION)</nav>]
+			</div></div>
+			</B_sites>
+
+			[(#REM) Menu de navigation mots-cles ]
+			<B_mots>
+			<div class="menu sn-pushs sn-pushs-cold"><div class="sn-push">
+				<p class="sn-push-etiquette"><span><:mots_clefs:></span></p>
+				<ul>
+					<BOUCLE_mots(MOTS?) {id_syndic} {par titre}>
+					<li><a href="#URL_MOT" rel="tag">#TITRE</a></li>
+					</BOUCLE_mots>
+				</ul>
+			</div></div>
+			</B_mots>
+			<INCLURE{fond=inclure/sn_pushs,objet=snschema,id_objet=2,sn_position=cold,domid=sn-pushs-cold,liste_snpushs=#GET{snpushs_cold}} />
+		</aside><!--.aside-->
+
+	</main><!--.main-->
+
+	<INCLURE{fond=inclure/footer,self=#SELF} />
+
+</div><!--.page-->
+</body>
+</html>
+</BOUCLE_principale>

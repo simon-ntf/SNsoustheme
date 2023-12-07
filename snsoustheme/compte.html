@@ -1,0 +1,128 @@
+[(#PLUGIN{snabonnements}|oui|sinon_interdire_acces)]
+[(#SESSION{id_auteur}|oui|sinon_interdire_acces)]
+[(#CONFIG{accepter_inscriptions}|sinon_interdire_acces)]
+[(#CONFIG{sn_abo_page_compte_activer}|=={on}|oui|sinon_interdire_acces)]
+[(#SESSION{statut}|=={6forum}|ou{0minirezo}|ou{1comite}|oui|sinon_interdire_acces)]
+[(#SESSION{statut}|=={6forum}|oui)[(#CONFIG{accepter_visiteurs}|sinon_interdire_acces)]]
+#SET{snabos_actives,non}
+<B_principale>
+<BOUCLE_principale(AUTEURS) {statut IN 0minirezo,1comite,6forum} {id_auteur=#SESSION{id_auteur}}>
+<!DOCTYPE html>
+<html dir="#LANG_DIR" lang="#LANG" class="[(#LANG_DIR)][ sn-mode-couleur-(#ENV{sn_mode_couleur})][ sn-mode-typo-(#ENV{sn_mode_typo})] sn-page-grille[ (#LANG)] no-js">
+<head>
+	<script type='text/javascript'>/*<![CDATA[*/(function(H){H.className=H.className.replace(/\bno-js\b/,'js')})(document.documentElement);/*]]>*/</script>
+	<title><:snabo:page_compte_titre:> - [(#NOM_SITE_SPIP|textebrut)]</title>
+	<meta name="description" content="<:snabo:page_compte_descriptif:>" />
+	<INCLURE{fond=inclure/head,robots=none} />
+</head>
+
+<body class="pas_surlignable page_compte">
+<div class="page">
+
+	<INCLURE{fond=inclure/header,env} />
+	<INCLURE{fond=inclure/sn_header_menus,env} />
+
+<main class="main [ (#GET{sncolonnes_classe})]" role="main">
+	<div class="sn-section sn-section-contenu wrapper">
+
+		<div class="sn-brique content" id="content">
+
+		<p class="arbo"><a href="#URL_SITE_SPIP/"><:accueil_site:></a> &gt; <strong class="on"><:snabo:page_compte_titre:></strong></p>
+
+		<div class="cartouche">
+			<h1><:snabo:page_compte_titre:></h1>
+			<p class="sn-compte-bienvenue"><:snabo:page_compte_message_bienvenue:> [(#SESSION{sndp/sn_prenom}) ]! <:snabo:page_compte_descriptif:></p>
+
+			[(#SESSION{consentement_dp}|=={oui}|non)
+			[(#SET{lien_legal,[ <a href="(#URL_PAGE{legal})"><:snedition:page_legal_titre:></a>]})]
+			[(#SET{lien_legal,#GET{lien_legal}|strtolower})]
+			<div class="sn-avertissement">
+				<p><strong><:snabo:page_compte_message_dp_a:></strong></p>
+				<p><:snabo:page_compte_message_dp_b:></p>
+				[<p>(#ENV{fsection}|=={infos_perso}|ou{#ENV{fsection}|=={''}}|non)
+				[(#SET{lien_onglet, [<a href="(#URL_PAGE{compte}|parametre_url{fsection,infos_perso})"><:snabo:compte_dp_titre:></a>]})]
+				<strong><:snabo:page_compte_message_dp_lien_onglet{lien_onglet=#GET{lien_onglet}}:></strong>
+				</p>]
+				[<p><strong>(#ENV{fsection}|=={infos_perso}|ou{#ENV{fsection}|=={''}}|oui)<:snabo:page_compte_message_dp_formulaire:></strong></p>]
+				<p class="sn-txt-mini sn-aere-bloc-2h"><:snabo:rgpd_legal_lien{lien=#GET{lien_legal}}:></p>
+
+			</div>]
+		</div>
+
+		<B_snabos>[(#TOTAL_BOUCLE|>={0}|oui)#SET{snabos_actives,oui}]<BOUCLE_snabos(SNABONNEMENTS){statut=publie}> </BOUCLE_snabos></B_snabos>
+		<nav class="sn-nav sn-nav-onglets"><ul>
+			<li><a id="infos-perso-btn" rel="nofollow"[ href="(#SELF||parametre_url{fsection,infos_perso})"] class="sn-btn sn-btn-o [(#ENV{fsection}|=={infos_perso}|ou{#ENV{fsection}|=={''}}|?{sn-btn-o-on, })] ajax"><:snabo:compte_dp_titre:></a></li>
+			<li><a id="connexion-btn" rel="nofollow"[ href="(#SELF|parametre_url{fsection,connexion})"] class="sn-btn sn-btn-o [(#ENV{fsection}|=={connexion}|?{sn-btn-o-on, })] ajax"><:snabo:compte_connexion_titre:></a></li>
+			[(#CONFIG{sn_abo_abonnement_activer}|=={on}|oui)[(#GET{snabos_actives}|=={oui}|oui)<li><a id="abonnements-btn" rel="nofollow"[ href="(#SELF|parametre_url{fsection,abonnements})"] class="sn-btn sn-btn-o [(#ENV{fsection}|=={abonnements}|?{sn-btn-o-on, })] ajax"><:snabo:compte_abonnements_titre:></a></li>]]
+		</ul></nav>
+
+		<div class="texte">
+			[(#ENV{fsection}|=={infos_perso}|ou{#ENV{fsection}|=={''}}|oui)<div id="section-infos-perso">
+				<p class="sn-aere-bloc-2"><:snabo:compte_dp_legende:></p>
+				<div class="ajax">#FORMULAIRE_EDITER_AUTEUR_DP{#ID_AUTEUR}</div>
+			</div>]
+			[(#CONFIG{sn_abo_abonnement_activer}|=={on}|oui)[(#ENV{fsection}|=={abonnements}|oui)[(#GET{snabos_actives}|=={oui}|oui)<div id="section-infos-abonnements">
+				<p class="sn-aere-bloc-2h"><:snabo:compte_abonnements_legende:></p>
+				<div class="ajax">#FORMULAIRE_SELECTIONNER_SNABOS{#ID_AUTEUR}</div>
+			</div>]]]
+			[(#ENV{fsection}|=={connexion}|oui)<div id="section-infos-connexion">
+				<p class="sn-aere-bloc-2"><:snabo:compte_connexion_legende:></p>
+				<div class="sn-compte-auth-section">
+					<h3><:snabo:form_maj_email_titre:></h3>
+					[<p class="sn_exergue_modifiable">(#EMAIL)</p>]
+					<p><:snabo:form_maj_email_explication:></p>
+					<a href="#" class="sn-acc"[(#ENV{apres_modif}|non) data-ferme="oui"]><h4>
+						[(#EMAIL|?{<:snabo:form_maj_email_action_modifier:>,<:snabo:form_maj_email_action_ajouter:>})]
+					</h4></a>
+					<div>#FORMULAIRE_EDITER_AUTEUR_EMAIL{#ID_AUTEUR}</div>
+				</div>
+
+				<div class="sn-compte-auth-section">
+					<h3><:snabo:form_maj_pass_titre:></h3>
+					<p><:snabo:form_maj_pass_explication:></p>
+					<p><a rel="nofollow" href="#URL_PAGE{spip_pass}"><:snabo:form_maj_pass_action_modifier:></a></p>
+					<p><:snabo:form_maj_pass_post:></p>
+				</div>
+
+				<div class="sn-compte-auth-section">
+					<h3><:snabo:form_maj_login_titre:></h3>
+					[<p class="sn_exergue_modifiable">@ (#LOGIN)</p>]
+					<p><:snabo:form_maj_login_explication:></p>
+					<a href="#" class="sn-acc"[(#ENV{apres_modif}|non) data-ferme="oui"]><h4><:snabo:form_maj_login_action_modifier:></h4></a>
+					<div>#FORMULAIRE_EDITER_AUTEUR_LOGIN{#ID_AUTEUR}</div>
+				</div>
+
+				<div class="sn-compte-auth-section">
+					<h3><:snabo:form_maj_email2_titre:></h3>
+					[<p class="sn_exergue_modifiable">(#SN_EMAIL2)</p>]
+					<p><:snabo:form_maj_email2_explication:></p>
+					<a href="#" class="sn-acc"[(#ENV{apres_modif}|non) data-ferme="oui"]><h4>
+						[(#SN_EMAIL2|?{<:snabo:form_maj_email2_action_modifier:>,<:snabo:form_maj_email2_action_ajouter:>})]
+					</h4></a>
+					<div>#FORMULAIRE_EDITER_AUTEUR_SN_EMAIL2{#ID_AUTEUR}</div>
+				</div>
+
+
+				<div class="sn-compte-auth-section">
+					<h3><:snabo:form_maj_desinscrire_titre:></h3>
+					<p><:snabo:form_maj_desinscrire_explication:></p>
+					<p><a rel="nofollow" href="[(#URL_PAGE{contact})]"><:snabo:form_desincr_action:></a></p>
+				</div>
+
+				</div>]
+
+			</div>
+
+		</div><!--.content-->
+	</div><!--.wrapper-->
+</main><!--.main-->
+
+	<INCLURE{fond=inclure/footer,self=#SELF} />
+
+</div><!--.page-->
+</body>
+</html>
+</BOUCLE_principale>
+</B_principale>
+[(#INCLURE{fond=404})]
+<//B_principale>
