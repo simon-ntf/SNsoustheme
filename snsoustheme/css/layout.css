@@ -171,7 +171,7 @@ a.snsuite_out{ opacity:0.8; }
 
 	.arbo { display: block; }
 	/* Logo site */
-	.sn-logo-site img{ margin: 0 auto 0 0; }
+	.sn-logo-site img{ max-width: 360px; margin: 0 auto 0 0; }
 	/* -- Flux integres -- */
 	.sn-flux-grille > *{ display: inline-block; vertical-align: top; width: 47%; }
 	.sn-flux-diapo .sn-flux-contenu{ display: inline-block; vertical-align: middle; width: 63%; margin: 0 1%; }
